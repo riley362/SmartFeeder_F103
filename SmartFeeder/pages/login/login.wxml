@@ -1,0 +1,44 @@
+<!--pages/login/login.wxml — 安全验证页-->
+<view class="login-page">
+
+  <!-- 顶部留白 + Logo 区域 -->
+  <view class="login-header">
+    <view class="logo-circle">
+      <text class="logo-icon">🐾</text>
+    </view>
+    <text class="app-name">智能饲养系统</text>
+    <text class="app-subtitle">Smart Feeder Console</text>
+  </view>
+
+  <!-- 密码输入卡片 -->
+  <view class="card login-card">
+    <text class="login-label">请输入设备密码</text>
+    <input
+      class="login-input"
+      type="number"
+      password="{{!showPassword}}"
+      placeholder="请输入 6 位数字密码"
+      maxlength="6"
+      value="{{password}}"
+      bindinput="onPasswordInput"
+    />
+    <!-- 显示/隐藏密码 -->
+    <view class="show-pwd-row" bindtap="toggleShowPassword">
+      <view class="checkbox {{showPassword ? 'checked' : ''}}">
+        <text wx:if="{{showPassword}}" class="check-mark">✓</text>
+      </view>
+      <text class="show-pwd-text">显示密码</text>
+    </view>
+
+    <!-- 错误提示 -->
+    <text wx:if="{{errorMsg}}" class="error-msg">{{errorMsg}}</text>
+
+    <!-- 进入系统按钮 -->
+    <view class="login-btn {{password.length === 6 ? 'active' : ''}}" bindtap="onLogin">
+      <text class="login-btn-text">进入系统</text>
+    </view>
+  </view>
+
+  <!-- 底部安全提示 -->
+  <text class="footer-hint">设备本地验证 · 数据不离开局域网</text>
+</view>

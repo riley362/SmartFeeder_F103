@@ -1,0 +1,209 @@
+<!--pages/dashboard/dashboard.wxml — 主控仪表盘 · Apple 极简风-->
+<scroll-view scroll-y class="page">
+
+  <!-- ============ 连接状态胶囊 ============ -->
+  <view class="status-bar">
+    <view class="status-pill status-{{netConnected ? (deviceOnline ? 'online' : 'idle') : 'offline'}}">
+      <view class="status-dot"></view>
+      <text class="status-text">
+        {{netConnected ? (deviceOnline ? '设备在线' : '等待设备上报') : '云端未连接'}}
+      </text>
+    </view>
+  </view>
+
+  <!-- ============ 1. 状态纵览 2x2 ============ -->
+  <view class="section-header">
+    <text class="section-label">状态纵览</text>
+  </view>
+
+  <view class="grid">
+    <!-- 光照强度 -->
+    <view class="tile">
+      <text class="tile-label">光照强度</text>
+      <view class="tile-value-row">
+        <text class="tile-num">{{lightIntensity}}</text>
+        <text class="tile-unit">Lux</text>
+      </view>
+    </view>
+
+    <!-- 空气质量 -->
+    <view class="tile">
+      <text class="tile-label">空气质量</text>
+      <view class="tile-value-row">
+        <text class="tile-num quality-{{airQualityLevel}}">{{airQuality}}</text>
+      </view>
+    </view>
+
+    <!-- 饮水余量 -->
+    <view class="tile">
+      <view class="tile-label-row">
+        <text class="tile-label">饮水余量</text>
+        <text wx:if="{{waterLow}}" class="tile-warn">不足</text>
+      </view>
+      <view class="tile-value-row">
+        <text class="tile-num {{waterLow ? 'num-low' : ''}}">{{waterLevel}}</text>
+        <text class="tile-unit">%</text>
+      </view>
+      <view class="bar-track">
+        <view class="bar-fill {{waterLow ? 'bar-low' : 'bar-water'}}" style="width: {{waterLevel}}%"></view>
+      </view>
+    </view>
+
+    <!-- 食物余量 -->
+    <view class="tile">
+      <view class="tile-label-row">
+        <text class="tile-label">食物余量</text>
+        <text wx:if="{{foodLow}}" class="tile-warn">不足</text>
+      </view>
+      <view class="tile-value-row">
+        <text class="tile-num {{foodLow ? 'num-low' : ''}}">{{foodLevel}}</text>
+        <text class="tile-unit">%</text>
+      </view>
+      <view class="bar-track">
+        <view class="bar-fill {{foodLow ? 'bar-low' : 'bar-food'}}" style="width: {{foodLevel}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ AI 宠物识别（通栏） ============ -->
+  <view class="card-ai">
+    <view class="ai-left">
+      <text class="ai-title">实时识别</text>
+      <text class="ai-sub">AI Camera</text>
+    </view>
+    <view class="ai-right">
+      <view class="ai-dot {{petType ? 'active' : ''}}"></view>
+      <text class="ai-status">{{petType ? petType + '已就位' : '待机中'}}</text>
+    </view>
+  </view>
+
+  <!-- ============ 2. 控制中心 ============ -->
+  <view class="section-header">
+    <text class="section-label">控制中心</text>
+  </view>
+
+  <view class="card-ctrl">
+    <!-- 分段控制器：自动 / 手动 -->
+    <view class="seg-wrap">
+      <view class="seg">
+        <view
+          class="seg-item {{isAutoMode ? 'seg-active' : ''}}"
+          bindtap="onSwitchMode"
+          data-mode="auto"
+        >自动模式</view>
+        <view
+          class="seg-item {{!isAutoMode ? 'seg-active' : ''}}"
+          bindtap="onSwitchMode"
+          data-mode="manual"
+        >手动模式</view>
+      </view>
+    </view>
+
+    <!-- 手动控制面板 -->
+    <view class="panel {{isAutoMode ? 'panel-off' : ''}}">
+
+      <!-- 补光灯 -->
+      <view class="ctrl-row">
+        <view class="ctrl-meta">
+          <view class="dot-indicator {{lightOn && !isAutoMode ? 'dot-on' : ''}}"></view>
+          <text class="ctrl-name">补光灯</text>
+        </view>
+        <view
+          class="toggle {{lightOn ? 'toggle-on' : ''}}"
+          bindtap="onToggleLight"
+        >
+          <view class="toggle-knob"></view>
+        </view>
+      </view>
+
+      <view class="sep"></view>
+
+      <!-- 投喂量 -->
+      <view class="ctrl-row">
+        <view class="ctrl-meta">
+          <view class="dot-indicator"></view>
+          <text class="ctrl-name">投喂量</text>
+        </view>
+        <view class="amount-box">
+          <input
+            class="amount-input"
+            type="digit"
+            placeholder="50"
+            value="{{feedAmount}}"
+            bindinput="onFeedAmountInput"
+            disabled="{{isAutoMode}}"
+          />
+          <text class="amount-unit">g</text>
+        </view>
+      </view>
+
+      <view class="sep"></view>
+
+      <!-- 立即投喂按钮 -->
+      <view class="btn-feed {{isAutoMode ? 'btn-off' : ''}}" bindtap="onFeedNow">
+        <text class="btn-feed-text">立即投喂</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 3. 定时投喂 ============ -->
+  <view class="section-header">
+    <text class="section-label">定时投喂</text>
+  </view>
+
+  <view class="card-sched">
+    <!-- 新增计划 -->
+    <view class="sched-add-row">
+      <picker mode="time" value="{{newSchedTime}}" bindchange="onSchedTimePick">
+        <view class="sched-time-btn">{{newSchedTime}}</view>
+      </picker>
+      <view class="sched-amount-wrap">
+        <input
+          class="sched-amount-input"
+          type="digit"
+          placeholder="30"
+          value="{{newSchedAmount}}"
+          bindinput="onSchedAmountInput"
+        />
+        <text class="sched-amount-unit">g</text>
+      </view>
+      <view class="sched-add-btn" bindtap="onAddSchedule">
+        <text class="sched-add-icon">+</text>
+      </view>
+    </view>
+
+    <!-- 计划列表 -->
+    <view wx:if="{{schedules.length === 0}}" class="sched-empty">
+      <text class="sched-empty-text">暂无定时计划，请点击 + 添加</text>
+    </view>
+
+    <view wx:for="{{schedules}}" wx:key="id" class="sched-item">
+      <view class="sched-item-left">
+        <text class="sched-item-time">{{item.time}}</text>
+        <text class="sched-item-amount">{{item.amount}}g</text>
+        <text wx:if="{{item.firedToday}}" class="sched-item-done">Done</text>
+      </view>
+      <view class="sched-item-right">
+        <view
+          class="toggle toggle-sm {{item.enabled ? 'toggle-on' : ''}}"
+          bindtap="onToggleSchedule"
+          data-idx="{{index}}"
+        >
+          <view class="toggle-knob"></view>
+        </view>
+        <view class="sched-del" bindtap="onRemoveSchedule" data-idx="{{index}}">
+          <text class="sched-del-icon">-</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 4. 系统信息 ============ -->
+  <view class="sys-footer">
+    <text class="sys-text">{{systemTime}}</text>
+    <view class="sys-dot"></view>
+    <text class="sys-text">今日投喂 {{feedCountToday}} 次</text>
+  </view>
+
+  <view style="height: 80rpx;"></view>
+</scroll-view>

@@ -1,0 +1,38 @@
+# STM32 build output
+SmartFeeder_F103/Debug/
+SmartFeeder_F103/Release/
+SmartFeeder_F103/.settings/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.log
+
+# Keil MDK
+*.uvguix.*
+*.bak
+*.lst
+*.crf
+*.lnp
+*.htm
+Listings/
+Objects/
+RTE/
+
+# IDE
+.vscode/
+*.swp
+*~
+
+# WeChat mini-program
+SmartFeeder/node_modules/
+SmartFeeder/miniprogram_npm/
+SmartFeeder/.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini

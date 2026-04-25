@@ -1,0 +1,69 @@
+/**app.wxss — 全局样式重置 & HomeKit 设计基础变量**/
+
+/* ========== Reset ========== */
+page {
+  margin: 0;
+  padding: 0;
+  background-color: #F5F7FA;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+               'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  color: #1D1D1F;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text, image, input, button, scroll-view {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========== 通用卡片 ========== */
+.card {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.03);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+/* ========== 主题色 ========== */
+.text-primary {
+  color: #32B5A0;
+}
+
+.bg-primary {
+  background-color: #32B5A0;
+}
+
+/* ========== 辅助文字层级 ========== */
+.text-secondary {
+  color: #8E8E93;
+  font-size: 24rpx;
+}
+
+.text-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1D1D1F;
+}
+
+.text-value {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #1D1D1F;
+}
+
+/* ========== 按钮重置 ========== */
+button::after {
+  border: none;
+}
+
+button {
+  background: none;
+  padding: 0;
+  margin: 0;
+  line-height: inherit;
+  font-size: inherit;
+}
