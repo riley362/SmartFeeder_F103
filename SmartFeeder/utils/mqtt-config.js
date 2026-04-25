@@ -18,7 +18,7 @@ module.exports = {
 
   // 账号私钥 (UID) —— 同时也是 MQTT clientId 前缀
   // 与硬件端 BEMFA_UID 保持一致
-  UID: 'e1cf97bfce8b4c0dbae0d0e26fc05941',
+  UID: 'YOUR_BEMFA_UID',
 
   // 设备上报主题：硬件 publish → 小程序 subscribe
   TOPIC_UP: 'feeder003',
